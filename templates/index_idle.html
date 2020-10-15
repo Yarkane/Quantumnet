@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mash</title>
+</head>
+<body>
+
+<h1>Mash</h1>
+<p>Openssl Post Quantum Setup Tool</p>
+
+<form method="post">
+    <h3>Signature algorithm</h3>
+    <input type="radio" name="sig" value="dilithium2" checked> dilithium2 <br>
+    <input type="radio" name="sig" value="dilithium3"> dilithium3 <br>
+    <input type="radio" name="sig" value="dilithium4"> dilithium4 <br>
+    <input type="radio" name="sig" value="falcon512"> falcon512 <br>
+    <input type="radio" name="sig" value="falcon1024"> falcon1024 <br>
+    <input type="radio" name="sig" value="rainbowlaclassic"> rainbowlaclassic <br>
+    <input type="radio" name="sig" value="rainbowVcclassic"> rainbowVcclassic
+
+    <br><br>
+    <h3>Key Exchange Algorithm - unused at the moment</h3>
+    <input type="radio" name="kex" value="lightsaber" checked> lightsaber <br>
+    <input type="radio" name="kex" value="saber"> saber <br>
+    <input type="radio" name="kex" value="firesaber"> firesaber <br>
+    <input type="radio" name="kex" value="ntru_hps2048509"> ntru_hps2048509 <br>
+    <input type="radio" name="kex" value="ntru_hps2048677"> ntru_hps2048677 <br>
+    <input type="radio" name="kex" value="ntru_hps4096821"> ntru_hps4096821 <br>
+    <input type="radio" name="kex" value="ntru_hrss701"> ntru_hrss701 <br>
+    <input type="radio" name="kex" value="kyber512"> kyber512 <br>
+    <input type="radio" name="kex" value="kyber768"> kyber768 <br>
+    <input type="radio" name="kex" value="kyber1024"> kyber1024 <br>
+    <input type="radio" name="kex" value="kyber90s512"> kyber90s512 <br>
+    <input type="radio" name="kex" value="kyber90s768"> kyber90s768 <br>
+    <input type="radio" name="kex" value="kyber90s1024"> kyber90s1024
+
+    <br><br>
+    <input type='hidden' name="action" value='go'>
+    <input type='submit' value='Launch the server'>
+</form>
+
+</body>
+</html>
