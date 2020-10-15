@@ -44,10 +44,11 @@ Supported signature algorithms :
     rainbowlaclassic, rainbowVcclassic
 
 Supported key exchange algorithms :
+
     lightsaber, saber, firesaber
     ntru\_hps2048509, ntru\_hps2048677, ntru\_hps4096821, ntru\_hrss701
     kyber512, kyber768, kyber1024, kyber90s512, kyber90s768, kyber90s1024
-]
+
 
 ## TODO
 
