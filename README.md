@@ -46,7 +46,7 @@ Supported signature algorithms :
 Supported key exchange algorithms :
 
     lightsaber, saber, firesaber
-    ntru\_hps2048509, ntru\_hps2048677, ntru\_hps4096821, ntru\_hrss701
+    ntru_hps2048509, ntru_hps2048677, ntru_hps4096821, ntru_hrss701
     kyber512, kyber768, kyber1024, kyber90s512, kyber90s768, kyber90s1024
 
 
