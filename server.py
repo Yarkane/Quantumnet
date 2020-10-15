@@ -68,8 +68,9 @@ def launch(sig, kex):
         SignatureAlgorithmUsed = sig
         KeyExchangeAlgorithmUsed = kex
         process = launch_openssl_server(sig)
-    response = app.make_response(render_template("index_running.html"))
-    return response
+        response = app.make_response(
+            render_template("index_running.html", kex=KeyExchangeAlgorithmUsed, sig=SignatureAlgorithmUsed))
+        return response
 
 
 def stop():
@@ -79,6 +80,8 @@ def stop():
     return response
 
 
+# GUI
+
 @app.route("/", methods=['GET'])
 def start():
     global SignatureAlgorithmUsed, KeyExchangeAlgorithmUsed
@@ -87,7 +90,7 @@ def start():
             render_template("index_running.html", kex=KeyExchangeAlgorithmUsed, sig=SignatureAlgorithmUsed))
     else:
         response = app.make_response(
-            render_template("index_idle.html", kex=KeyExchangeAlgorithmUsed, sig=SignatureAlgorithmUsed))
+            render_template("index_idle.html"))
 
     return response
 
@@ -104,6 +107,15 @@ def run():
         return stop()
     else:
         pass
+
+
+# Python Client Link
+
+@app.route("/controller", methods=['GET'])
+def send():
+    # We just return the algorithms we use.
+    # This will be done by sending the index_running page.
+    return render_template("index_running.html", kex=KeyExchangeAlgorithmUsed, sig=SignatureAlgorithmUsed)
 
 
 # Main

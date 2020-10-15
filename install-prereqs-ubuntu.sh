@@ -8,7 +8,8 @@ apt install build-essential \
             cmake \
             ninja-build \
             libssl-dev \
-            libpcre3-dev
+            libpcre3-dev \
+            python3
             wget;
 
 git clone --single-branch https://github.com/open-quantum-safe/liboqs
@@ -31,4 +32,9 @@ chmod 774 liboqs
 chmod 774 liboqs/*
 chmod 774 openssl
 chmod 774 openssl/*
+
+# Install python dependencies
+pip install requests-html
+pip install click
+pip install flask
 
