@@ -1,5 +1,6 @@
 #!/bin/bash
 set -ex
+ROOT=$(pwd)
 
 apt install build-essential \
             autoconf \
@@ -9,7 +10,7 @@ apt install build-essential \
             ninja-build \
             libssl-dev \
             libpcre3-dev \
-            python3
+            python3 \
             wget;
 
 git clone --single-branch https://github.com/open-quantum-safe/liboqs
