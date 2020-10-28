@@ -10,7 +10,7 @@ import re
 SupportedSigs = [
     "dilithium2", "dilithium3", "dilithium4",
     "falcon512", "falcon1024",
-    "rainbowlaclassic", "rainbowVcclassic"
+    "rainbowlaclassic", "rainbowVcclassic","DSA"
 ]
 SupportedKex = [
     "lightsaber", "saber", "firesaber",
