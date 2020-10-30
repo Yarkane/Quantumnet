@@ -42,6 +42,7 @@ Once the TLS server is running, simply launch this command in another terminal :
 Then, the client will get from the Flask server the algorithms you use, and test the connection with the TLS server.
 
 Here is the list of the arguments you can pass to client.py :
+
     --flask : The IPv4 only address of the Flask server (default : 127.0.0.1:5000)
     --tls_server : The IPv4 only address of the TLS server (default : 127.0.0.1:4433)
     --force-sig : If you want to force a signature algorithm from the list
@@ -57,6 +58,7 @@ Everything runs in this command :
     sudo python3 simple_nginx.py
 
 There are also some arguments :
+
     --tls_port : The port that you want the node server to use (default : 4433)
     --sig : The Signature algorithm you want to benchmark (default : dilithium2)
     --kex : The Key Exchange algorthm you want to benchmark (default : saber)
