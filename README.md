@@ -61,7 +61,25 @@ There are also some arguments :
 
     --tls_port : The port that you want the node server to use (default : 4433)
     --sig : The Signature algorithm you want to benchmark (default : dilithium2)
-    --kex : The Key Exchange algorthm you want to benchmark (default : saber)
+    --kex : The Key Exchange algorithm you want to benchmark (default : saber)
+
+## More complex Mininet server
+
+If the simple Mininet server is working great, you can then start to customize your experiments using this command :
+    
+    sudo python3 pq_server_simulation.py
+
+Using these arguments :
+
+    --tls_port : Ther port that you want the node server to use (default : 4433)
+    --sig : The Signature algorithm you want to benchmark (default : dilithium2)
+    --kex : The Key Exchange algorithm you want to benchmark (default : saber)
+    --bandwith : The bandwith of the switch - server link in Mbps (default : 8)
+    --delay : The delay of the switch - server link, in the format ___ms (default : 10ms)
+    --loss : The loss rate of the switch - server link (default : 0)
+    --cpu : The CPU percentage allowed to the server (default : 1)
+    --nodes : The number of clients (default : 1)
+    --queue : The maximum size of the queue for the switch - server link (default : 14)
 
 ## Supported OQS-algorithms
 
