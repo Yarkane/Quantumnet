@@ -81,6 +81,16 @@ Using these arguments :
     --nodes : The number of clients (default : 1)
     --queue : The maximum size of the queue for the switch - server link (default : 14)
 
+To help you with this, you can always use the **Web Interface** included with Mash. To launch the Flask server that will handle your experiments, please use :
+
+    sudo python3 pq_server.py
+
+Then open a light web browser to the URL :
+
+    http://localhost:5000/
+
+Then enjoy !
+
 ## Supported OQS-algorithms
 
 The supported algorithms are mainly taken from the NIST selection process (round 3).
@@ -100,6 +110,6 @@ Supported key exchange algorithms :
 
 ## TODO
 
-Create more complex Mininet Workbenches, and a tool to create user defined workbench.
+Create Benchmarks is easy now, but the output is not so great. Find some useful data to print with the web interface, or use matplotlib to construct graphes !
 
 --

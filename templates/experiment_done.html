@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mash</title>
+</head>
+<body>
+
+<h1>Mash</h1>
+<p>The Experiment is done !</p>
+
+<h3>Parameters : </h3>
+<p>
+    Signature algorithm used : {{sig}}<br>
+    Key-Exchange algorithm used : {{kex}}<br>
+    Number of nodes : {{nodes}}<br>
+    CPU Usage for the server : {{cpu}}<br>
+    Bandwith of the link : {{bw}}<br>
+    Delay of the link : {{delay}}<br>
+    Loss Rate of the link : {{loss}}<br>
+    Queue Size : {{queue}}
+</p>
+<br>
+
+<h3>Results taken from one node : </h3>
+<p>
+    {{result}}
+</p>
+
+<h4>Click here when you want to discard this data and create another experiment.</h4>
+<form>
+     <input type='hidden' name="action" value='ok'>
+    <input type='submit' value='New experiment'>
+</form>
+
+</body>
+</html>
