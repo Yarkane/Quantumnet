@@ -39,6 +39,16 @@ def run_subprocess(command, working_dir='.'):
     return running_process
 
 
+def parse_return(ret):
+    return f'The experiment ran for {ret["nb_seconds"]} seconds. \r' \
+           f'\r' \
+           f'REAL RESULTS : {ret["nb_realsecs"]} real seconds, {ret["nb_connections_realsecs"]} connections, ' \
+           f'{ret["bytes_read_per_conn"]} bytes read per connection.\r' \
+           f'\r' \
+           f'SIMULATED RESULTS : {ret["nb_unrealsecs"]} simulated seconds, {ret["nb_connections_unrealsecs"]} connections, ' \
+           f'{ret["nb_conn_user_secs"]} connections per user seconds, {ret["bytes_read"]} bytes read.'
+
+
 class ExperimentThread:
     def __init__(self):
         self.output = ""
@@ -98,7 +108,7 @@ def start():
         response = app.make_response(
             render_template("experiment_done.html", kex=KeyExchangeAlgorithmUsed, sig=SignatureAlgorithmUsed,
                             nodes=NumberOfNodes, cpu=CpuUsage, bw=Bandwith, delay=Delay, loss=LossRate,
-                            queue=QueueSize, result=thread.output))
+                            queue=QueueSize, result=parse_return(thread.output)))
     else:
         response = app.make_response(
             render_template("experiment_idle.html"))

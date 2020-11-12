@@ -1,7 +1,7 @@
 from mininet.topo import Topo
 from mininet.node import CPULimitedHost
 from mininet.link import TCLink
-from mininet.net import Mininet
+from mininet.net import Mininet, Host
 import click
 import time
 import os
@@ -22,7 +22,7 @@ SupportedKex = [
 ]
 
 
-class DumbbellTopo(Topo):
+class QuantumTopo(Topo):
     def build(self, bw=8, delay="10ms", loss=0, cpu_usage=1, n_nodes=1, max_queue=14):
         clients = []
         switch1 = self.addSwitch('switch1')
@@ -41,6 +41,41 @@ class DumbbellTopo(Topo):
         self.addLink(appServer, switch2)
         self.addLink(crossServer, switch2)
         self.addLink(switch1, switch2, bw=bw, delay=delay, loss=loss, max_queue_size=max_queue)
+
+
+def parse_return(ret):
+    """
+    Format :
+    Collecting Connection statistics for 5 seconds
+    *******
+
+    x connections in xs; x connections/user sec, bytes read 0
+    x connections in x real seconds, x bytes read per connection
+    """
+    lines = ret.split("\n")
+    try:
+        nb_seconds = lines[0].split(" ")[4]
+        nb_connections_unrealsecs = lines[3].split(" ")[0]
+        nb_unrealsecs = lines[3].split(" ")[3][:-2]
+        nb_conn_user_secs = lines[3].split(" ")[4]
+        bytes_read = lines[3].split(" ")[9]
+        nb_connections_realsecs = lines[4].split(" ")[0]
+        nb_realsecs = lines[4].split(" ")[3]
+        bytes_read_per_conn = lines[4].split(" ")[6]
+        return {
+            "nb_seconds": nb_seconds,
+            "nb_connections_unrealsecs": nb_connections_unrealsecs,
+            "nb_unrealsecs": nb_unrealsecs,
+            "nb_conn_user_secs": nb_conn_user_secs,
+            "bytes_read": bytes_read,
+            "nb_connections_realsecs": nb_connections_realsecs,
+            "nb_realsecs": nb_realsecs,
+            "bytes_read_per_conn": bytes_read_per_conn
+        }
+    except:
+        return ret
+
+
 
 
 def nginx_setup(addr):
@@ -103,8 +138,9 @@ def s_time(tls_server, sig, kex):
 
 
 def simulate(port, kex, sig, bw=8, delay="10ms", loss=0, cpu_usage=1.0, n_nodes=1, max_queue=14):
-    dumbbell = DumbbellTopo(bw=bw, delay=delay, loss=loss, cpu_usage=cpu_usage, n_nodes=n_nodes, max_queue=max_queue)
+    dumbbell = QuantumTopo(bw=bw, delay=delay, loss=loss, cpu_usage=cpu_usage, n_nodes=n_nodes, max_queue=max_queue)
     network = Mininet(topo=dumbbell, host=CPULimitedHost, link=TCLink, autoPinCpus=True)
+    network.get("aServer").setCPUs(cores=1)
     network.start()
 
     appServer = network.get('aServer')
@@ -135,7 +171,7 @@ def simulate(port, kex, sig, bw=8, delay="10ms", loss=0, cpu_usage=1.0, n_nodes=
 
     appServer.cmd("sudo nginx -s stop")
     network.stop()
-    return ret
+    return parse_return(ret)
 
 
 # simulate(port, kex, sig, bw=8, delay="10ms", loss=0, cpu_usage=1, n_nodes=1, max_queue=14)
@@ -165,7 +201,9 @@ def main(tls_port, sig, kex, bandwith, delay, loss, cpu, nodes, queue):
     except ValueError:
         print("A numerical value has been wrongly passed")
     else:
-        simulate(tls_port, kex, sig, int(bandwith), delay, int(loss), float(cpu), int(nodes), int(queue))
+        os.system("mn -c")
+        ret = simulate(tls_port, kex, sig, int(bandwith), delay, int(loss), float(cpu), int(nodes), int(queue))
+        print(ret)
 
 
 if __name__ == '__main__':
