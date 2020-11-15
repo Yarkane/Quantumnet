@@ -17,6 +17,7 @@ git clone --single-branch https://github.com/open-quantum-safe/liboqs
 git clone --single-branch https://github.com/open-quantum-safe/openssl
 
 export OPENSSL_ROOT_DIR=/opt/openssl
+NGINX_VERSION=1.17.5
 
 # build liboqs
 cd liboqs
@@ -41,16 +42,18 @@ cd nginx-1.17.5
 sed -i 's/libcrypto.a/libcrypto.a -loqs/g' objs/Makefile;
 sed -i 's/EVP_MD_CTX_create/EVP_MD_CTX_new/g; s/EVP_MD_CTX_destroy/EVP_MD_CTX_free/g' src/event/ngx_event_openssl.c;
 make && make install;
+
+cd ../
+
 mkdir -p pki
 mkdir -p logs
 
-# Change perms
-cd ../
-chmod 774 liboqs
+chmod 774 pki
+chmod 774 pki/*
+chmod 774 logs
+chmod 774 logs/*
 chmod 774 liboqs/*
 chmod 774 openssl
 chmod 774 openssl/*
 chmod 774 nginx
 chmod 774 nginx/*
-chmod 774 pki
-chmod 774 logs

@@ -78,7 +78,7 @@ def nginx_setup(addr):
                     f"	}}\n"
                     f"}}\n"
                     f"\n")
-    filename = "nginx-conf/nginx.conf"
+    filename = "nginx/conf/nginx.conf"
     with open(filename, 'w') as f:
         f.write(nginx_config)
         f.close()
@@ -112,7 +112,7 @@ def simulate(port, kex, sig):
     os.system(prepare_PKI(sig))
 
     # Launch the server
-    appServer.cmd("sudo " + wd + "/nginx/sbin/nginx -c " + wd + "/nginx-conf/nginx.conf &")
+    appServer.cmd("sudo " + wd + "/nginx/sbin/nginx -c " + wd + "/nginx/conf/nginx.conf &")
     # Tell nginx to use configuration from the file we just created
 
     time.sleep(1)  # Server might need some time to start
