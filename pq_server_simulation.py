@@ -20,6 +20,30 @@ SupportedKex = [
     "kyber512", "kyber768", "kyber1024", "kyber90s512", "kyber90s768", "kyber90s1024",
     "EC"
 ]
+LevelOfSecurity = {
+    "dilithium2": 1,
+    "dilithium3": 3,
+    "dilithium4": 5,
+    "falcon512": 1,
+    "falcon1024": 5,
+    "rainbowlaclassic": 1,
+    "rainbowVcclassic": 5,
+    "lightsaber": 1,
+    "saber": 3,
+    "firesaber": 5,
+    "ntru_hps2048509": 1,
+    "ntru_hps2048677": 3,
+    "ntru_hps4096821": 5,
+    "ntru_hrss701": 3,
+    "kyber512": 1,
+    "kyber768": 3,
+    "kyber1024": 5,
+    "kyber90s512": 1,
+    "kyber90s768": 3,
+    "kyber90s1024": 5,
+    "DSA": 0,
+    "EC": 0
+}
 
 
 class QuantumTopo(Topo):
@@ -119,7 +143,7 @@ def nginx_setup(addr):
                     f"	}}\n"
                     f"}}\n"
                     f"\n")
-    filename = "nginx-conf/nginx.conf"
+    filename = "nginx/conf/nginx.conf"
     with open(filename, 'w') as f:
         f.write(nginx_config)
         f.close()
@@ -153,7 +177,7 @@ def simulate(port, kex, sig, bw=8, delay="10ms", loss=0, cpu_usage=1.0, n_nodes=
     os.system(prepare_PKI(sig))
 
     # Launch the server
-    appServer.cmd("sudo " + wd + "/nginx/sbin/nginx -c " + wd + "/nginx-conf/nginx.conf &")
+    appServer.cmd("sudo " + wd + "/nginx/sbin/nginx -c " + wd + "/nginx/conf/nginx.conf &")
     # Tell nginx to use configuration from the file we just created
 
     time.sleep(1)  # Server might need some time to start
@@ -185,7 +209,9 @@ def simulate(port, kex, sig, bw=8, delay="10ms", loss=0, cpu_usage=1.0, n_nodes=
 @click.option('--cpu', default="1", help="The CPU usage percentage (from 0 to 1) allowed to the server.")
 @click.option('--nodes', default="1", help="The number of clients.")
 @click.option('--queue', default="14", help="The maximum size of the queue for the 'switch <-> server' link.")
-def main(tls_port, sig, kex, bandwith, delay, loss, cpu, nodes, queue):
+@click.option('--hybrid_sig', is_flag=True, help="To combine the signature algorithm with the corresponding EC.")
+@click.option('--hybrid_kex', is_flag=True, help="To combine the key exchange algorithm with the corresponding EC.")
+def main(tls_port, sig, kex, bandwith, delay, loss, cpu, nodes, queue, hybrid_sig, hybrid_kex):
     if sig not in SupportedSigs:
         print("Signature algorithm not supported.")
     elif kex not in SupportedKex:
@@ -201,6 +227,49 @@ def main(tls_port, sig, kex, bandwith, delay, loss, cpu, nodes, queue):
     except ValueError:
         print("A numerical value has been wrongly passed")
     else:
+        level_sig = LevelOfSecurity[sig]
+        if level_sig == 0:
+            print("Using a non post quantum signature algorithm.")
+        elif level_sig == 1:
+            print("Using a post quantum signature algorithm, claimed level of security 1.")
+            if hybrid_sig:
+                curve = "p256"
+                print("The signature will be hybrid, with an Elliptic Curve" + curve + " of same level.")
+                sig = curve + "_" + sig
+        elif level_sig == 3:
+            print("Using a post quantum signature algorithm, claimed level of security 3.")
+            if hybrid_sig:
+                curve = "p384"
+                print("The signature will be hybrid, with an Elliptic Curve" + curve + " of same level.")
+                sig = curve + "_" + sig
+        elif level_sig == 5:
+            print("Using a post quantum signature algorithm, claimed level of security 5.")
+            if hybrid_sig:
+                curve = "p521"
+                print("The signature will be hybrid, with an Elliptic Curve" + curve + " of same level.")
+                sig = curve + "_" + sig
+
+        level_kex = LevelOfSecurity[kex]
+        if level_kex == 0:
+            print("Using a non post quantum key exchange algorithm.")
+        elif level_kex == 1:
+            print("Using a post quantum key exchange algorithm, claimed level of security 1.")
+            if hybrid_kex:
+                curve = "p256"
+                print("The key exchange will be hybrid, with an Elliptic Curve" + curve + " of same level.")
+                kex = curve + "_" + kex
+        elif level_kex == 3:
+            print("Using a post quantum key exchange algorithm, claimed level of security 3.")
+            if hybrid_kex:
+                curve = "p384"
+                print("The key exchange will be hybrid, with an Elliptic Curve" + curve + " of same level.")
+                kex = curve + "_" + kex
+        elif level_kex == 5:
+            print("Using a post quantum key exchange algorithm, claimed level of security 5.")
+            if hybrid_kex:
+                curve = "p521"
+                print("The key exchange will be hybrid, with an Elliptic Curve" + curve + " of same level.")
+                kex = curve + "_" + kex
         os.system("mn -c")
         ret = simulate(tls_port, kex, sig, int(bandwith), delay, int(loss), float(cpu), int(nodes), int(queue))
         print(ret)

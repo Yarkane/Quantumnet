@@ -44,7 +44,9 @@
     Loss rate of the link : <input type="range" name="loss" value="0" min="0" max="1" step="0.01" oninput="this.nextElementSibling.value = this.value"> <output>0</output><br>
     Queue size for the link : <input type="range" name="queue" value="14" min="1" max="50" step="1" oninput="this.nextElementSibling.value = this.value"> <output>14</output><br>
     TLS server port : <input type="text" name="port" value="4433"><br>
-
+    <br>
+    Use an equivalent Elliptic Curve in addition to the PQ Signature algorithm (Hybrid algorithm) : <input type="checkbox", name="hybrid_sig"><br>
+    Use an equivalent Elliptic Curve in addition to the PQ Key Exchange algorithm (Hybrid algorithm) : <input type="checkbox", name="hybrid_kex">
     <br><br>
     <input type='hidden' name="action" value='go'>
     <input type='submit' value='Launch the experiment'>

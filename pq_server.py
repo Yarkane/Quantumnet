@@ -25,7 +25,30 @@ SupportedKex = [
     "ntru_hps2048509", "ntru_hps2048677", "ntru_hps4096821", "ntru_hrss701",
     "kyber512", "kyber768", "kyber1024", "kyber90s512", "kyber90s768", "kyber90s1024",
 ]
-
+LevelOfSecurity = {
+    "dilithium2": 1,
+    "dilithium3": 3,
+    "dilithium4": 5,
+    "falcon512": 1,
+    "falcon1024": 5,
+    "rainbowlaclassic": 1,
+    "rainbowVcclassic": 5,
+    "lightsaber": 1,
+    "saber": 3,
+    "firesaber": 5,
+    "ntru_hps2048509": 1,
+    "ntru_hps2048677": 3,
+    "ntru_hps4096821": 5,
+    "ntru_hrss701": 3,
+    "kyber512": 1,
+    "kyber768": 3,
+    "kyber1024": 5,
+    "kyber90s512": 1,
+    "kyber90s768": 3,
+    "kyber90s1024": 5,
+    "DSA": 0,
+    "EC": 0
+}
 
 # Functions definition
 
@@ -40,11 +63,11 @@ def run_subprocess(command, working_dir='.'):
 
 
 def parse_return(ret):
-    return f'The experiment ran for {ret["nb_seconds"]} seconds. \r' \
-           f'\r' \
+    return f'The experiment ran for {ret["nb_seconds"]} seconds. \n' \
+           f'\n' \
            f'REAL RESULTS : {ret["nb_realsecs"]} real seconds, {ret["nb_connections_realsecs"]} connections, ' \
-           f'{ret["bytes_read_per_conn"]} bytes read per connection.\r' \
-           f'\r' \
+           f'{ret["bytes_read_per_conn"]} bytes read per connection.\n' \
+           f'\n' \
            f'SIMULATED RESULTS : {ret["nb_unrealsecs"]} simulated seconds, {ret["nb_connections_unrealsecs"]} connections, ' \
            f'{ret["nb_conn_user_secs"]} connections per user seconds, {ret["bytes_read"]} bytes read.'
 
@@ -124,6 +147,26 @@ def run():
         sig = request.form.get("sig")
         kex = request.form.get("kex")
 
+        hybrid_sig = request.form.get("hybrid_sig")
+        if hybrid_sig:
+            level = LevelOfSecurity[sig]
+            if level == 1:
+                sig = "p256_" + sig
+            elif level == 3:
+                sig = "p384_" + sig
+            elif level == 5:
+                sig = "p521_" + sig
+
+        hybrid_kex = request.form.get("hybrid_kex")
+        if hybrid_kex:
+            level = LevelOfSecurity[kex]
+            if level == 1:
+                kex = "p256_" + kex
+            elif level == 3:
+                kex = "p384_" + kex
+            elif level == 5:
+                kex = "p521_" + kex
+
         nodes = request.form.get("nodes")
         NumberOfNodes = nodes
 
@@ -146,6 +189,9 @@ def run():
         TLSPort = port
 
         IsAServerRunning = True
+        print("running")
+        print("signature : ", sig)
+        print("key exchange : ", kex)
         return launch(sig, kex, nodes, cpu, bw, delay, loss, queue, port)
     else:
         pass
