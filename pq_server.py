@@ -66,11 +66,11 @@ def run_subprocess(command, working_dir='.'):
 
 
 def parse_return(ret):
-    return f'The experiment ran for {ret["nb_seconds"]} seconds. \n' \
-           f'\n' \
+    return f'The experiment ran for {ret["nb_seconds"]} seconds. <br>' \
+           f'<br>' \
            f'REAL RESULTS : {ret["nb_realsecs"]} real seconds, {ret["nb_connections_realsecs"]} connections, ' \
-           f'{ret["bytes_read_per_conn"]} bytes read per connection.\n' \
-           f'\n' \
+           f'{ret["bytes_read_per_conn"]} bytes read per connection.<br>' \
+           f'<br>' \
            f'SIMULATED RESULTS : {ret["nb_unrealsecs"]} simulated seconds, {ret["nb_connections_unrealsecs"]} connections, ' \
            f'{ret["nb_conn_user_secs"]} connections per user seconds, {ret["bytes_read"]} bytes read.'
 
