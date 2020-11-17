@@ -15,6 +15,7 @@ Delay = "10ms"  # Default value
 LossRate = 0  # Default value
 QueueSize = 14  # Default value
 TLSPort = 4433  # Default value
+Time = 5  # Default value
 SupportedSigs = [
     "dilithium2", "dilithium3", "dilithium4",
     "falcon512", "falcon1024",
@@ -79,9 +80,9 @@ class ExperimentThread:
         self.output = ""
         self.finished = False
 
-    def run(self, port, kex, sig, bw, delay, loss, cpu, nodes, queue):
+    def run(self, port, kex, sig, bw, delay, loss, cpu, nodes, queue, time):
         self.finished = False
-        ret = pq_server_simulation.simulate(port, kex, sig, int(bw), delay, int(loss), int(cpu), int(nodes), int(queue))
+        ret = pq_server_simulation.simulate(port, kex, sig, float(bw), delay, float(loss), float(cpu), int(nodes), int(queue), int(time))
         self.output = ret
         self.finished = True
 
@@ -95,17 +96,18 @@ app = Flask(__name__)
 thread = ExperimentThread()
 
 
-def launch(sig, kex, nodes, cpu, bw, delay, loss, queue, port):
+def launch(sig, kex, nodes, cpu, bw, delay, loss, queue, port, time):
     global SupportedSigs, SupportedKex, process, SignatureAlgorithmUsed, KeyExchangeAlgorithmUsed
-    if sig in SupportedSigs and kex in SupportedKex:
-        SignatureAlgorithmUsed = sig
-        KeyExchangeAlgorithmUsed = kex
-        exp_thr = threading.Thread(target=thread.run, args=(port, kex, sig, bw, delay, loss, cpu, nodes, queue))
-        exp_thr.daemon = True  # Daemonize thread
-        exp_thr.start()  # Start the execution
-        response = app.make_response(
-            render_template("experiment_running.html", kex=KeyExchangeAlgorithmUsed, sig=SignatureAlgorithmUsed))
-        return response
+    SignatureAlgorithmUsed = sig
+    KeyExchangeAlgorithmUsed = kex
+    exp_thr = threading.Thread(target=thread.run, args=(port, kex, sig, bw, delay, loss, cpu, nodes, queue, time))
+    print("before thread")
+    exp_thr.daemon = True  # Daemonize thread
+    exp_thr.start()  # Start the execution
+    print("after thread")
+    response = app.make_response(
+        render_template("experiment_running.html", kex=KeyExchangeAlgorithmUsed, sig=SignatureAlgorithmUsed))
+    return response
 
 
 # GUI
@@ -143,58 +145,61 @@ def start():
 
 @app.route("/", methods=['POST'])
 def run():
-    global IsAServerRunning, NumberOfNodes, CpuUsage, Bandwith, Delay, LossRate, QueueSize, TLSPort, process
+    global IsAServerRunning, NumberOfNodes, CpuUsage, Bandwith, Delay, LossRate, QueueSize, TLSPort, process, Time
     action = request.form.get("action")
     if action == "go" and IsAServerRunning is not True:
         sig = request.form.get("sig")
         kex = request.form.get("kex")
+        if sig in SupportedSigs and kex in SupportedKex:
+            hybrid_sig = request.form.get("hybrid_sig")
+            if hybrid_sig:
+                level = LevelOfSecurity[sig]
+                if level == 1 or level == 2:
+                    sig = "p256_" + sig
+                elif level == 3:
+                    sig = "p384_" + sig
+                elif level == 5:
+                    sig = "p521_" + sig
 
-        hybrid_sig = request.form.get("hybrid_sig")
-        if hybrid_sig:
-            level = LevelOfSecurity[sig]
-            if level == 1 or level == 2:
-                sig = "p256_" + sig
-            elif level == 3:
-                sig = "p384_" + sig
-            elif level == 5:
-                sig = "p521_" + sig
+            hybrid_kex = request.form.get("hybrid_kex")
+            if hybrid_kex:
+                level = LevelOfSecurity[kex]
+                if level == 1:
+                    kex = "p256_" + kex
+                elif level == 3:
+                    kex = "p384_" + kex
+                elif level == 5:
+                    kex = "p521_" + kex
 
-        hybrid_kex = request.form.get("hybrid_kex")
-        if hybrid_kex:
-            level = LevelOfSecurity[kex]
-            if level == 1:
-                kex = "p256_" + kex
-            elif level == 3:
-                kex = "p384_" + kex
-            elif level == 5:
-                kex = "p521_" + kex
+            nodes = request.form.get("nodes")
+            NumberOfNodes = nodes
 
-        nodes = request.form.get("nodes")
-        NumberOfNodes = nodes
+            cpu = request.form.get("cpu")
+            CpuUsage = cpu
 
-        cpu = request.form.get("cpu")
-        CpuUsage = cpu
+            bw = request.form.get("bw")
+            Bandwith = bw
 
-        bw = request.form.get("bw")
-        Bandwith = bw
+            delay = request.form.get("delay")
+            Delay = delay
 
-        delay = request.form.get("delay")
-        Delay = delay
+            loss = request.form.get("loss")
+            LossRate = loss
 
-        loss = request.form.get("loss")
-        LossRate = loss
+            queue = request.form.get("queue")
+            QueueSize = queue
 
-        queue = request.form.get("queue")
-        QueueSize = queue
+            port = request.form.get("port")
+            TLSPort = port
 
-        port = request.form.get("port")
-        TLSPort = port
+            time = request.form.get("time")
+            Time = time
 
-        IsAServerRunning = True
-        print("running")
-        print("signature : ", sig)
-        print("key exchange : ", kex)
-        return launch(sig, kex, nodes, cpu, bw, delay, loss, queue, port)
+            IsAServerRunning = True
+            print("running")
+            print("signature : ", sig)
+            print("key exchange : ", kex)
+            return launch(sig, kex, nodes, cpu, bw, delay, loss, queue, port, time)
     else:
         pass
 
@@ -205,7 +210,7 @@ def run():
 def send():
     # We just return the algorithms we use.
     # This will be done by sending the experiment_running page.
-    return render_template("experiment_running.html", kex=KeyExchangeAlgorithmUsed, sig=SignatureAlgorithmUsed)
+    return render_template("experiment_running.html", kex=KeyExchangeAlgorithmUsed, sig=SignatureAlgorithmUsed, time=str(Time))
 
 
 # Main

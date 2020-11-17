@@ -155,13 +155,13 @@ def prepare_PKI(sig):
            f'/server.crt '
 
 
-def s_time(tls_server, sig, kex):
+def s_time(tls_server, sig, kex, time_exp):
     # Returns the command that will launch the s_time command for the nginx server
     return f"openssl/apps/openssl s_time -connect {tls_server} " \
-           f"-CAfile CA/{sig}_CA.crt -curves {kex} -new -time 5"
+           f"-CAfile CA/{sig}_CA.crt -curves {kex} -new -time {str(time_exp)}"
 
 
-def simulate(port, kex, sig, bw=8, delay="10ms", loss=0, cpu_usage=1.0, n_nodes=1, max_queue=14):
+def simulate(port, kex, sig, bw=8, delay="10ms", loss=0, cpu_usage=1.0, n_nodes=1, max_queue=14, time_exp=5):
     dumbbell = QuantumTopo(bw=bw, delay=delay, loss=loss, cpu_usage=cpu_usage, n_nodes=n_nodes, max_queue=max_queue)
     network = Mininet(topo=dumbbell, host=CPULimitedHost, link=TCLink, autoPinCpus=True)
     network.get("aServer").setCPUs(cores=1)
@@ -188,12 +188,12 @@ def simulate(port, kex, sig, bw=8, delay="10ms", loss=0, cpu_usage=1.0, n_nodes=
     for i in range(n_nodes - 1):
         app_client = network.get('aClient_' + str(i))
         if i != n_nodes - 1:
-            app_client.cmd(s_time(addr, sig, kex) + " &")
+            app_client.cmd(s_time(addr, sig, kex, time_exp) + " &")
     last_client = network.get('aClient_' + str(n_nodes - 1))
-    ret = last_client.cmd(s_time(addr, sig, kex))
+    ret = last_client.cmd(s_time(addr, sig, kex, time_exp))
     print(ret)
 
-    appServer.cmd("sudo nginx -s stop")
+    appServer.cmd("sudo " + wd + "/nginx/sbin/nginx -s stop")
     network.stop()
     return parse_return(ret)
 
@@ -209,9 +209,10 @@ def simulate(port, kex, sig, bw=8, delay="10ms", loss=0, cpu_usage=1.0, n_nodes=
 @click.option('--cpu', default="1", help="The CPU usage percentage (from 0 to 1) allowed to the server.")
 @click.option('--nodes', default="1", help="The number of clients.")
 @click.option('--queue', default="14", help="The maximum size of the queue for the 'switch <-> server' link.")
+@click.option('--time_exp', default="5", help="The time during which the experiment will be conducted.")
 @click.option('--hybrid_sig', is_flag=True, help="To combine the signature algorithm with the corresponding EC.")
 @click.option('--hybrid_kex', is_flag=True, help="To combine the key exchange algorithm with the corresponding EC.")
-def main(tls_port, sig, kex, bandwith, delay, loss, cpu, nodes, queue, hybrid_sig, hybrid_kex):
+def main(tls_port, sig, kex, bandwith, delay, loss, cpu, nodes, queue, time_exp, hybrid_sig, hybrid_kex):
     if sig not in SupportedSigs:
         print("Signature algorithm not supported.")
     elif kex not in SupportedKex:
@@ -224,6 +225,7 @@ def main(tls_port, sig, kex, bandwith, delay, loss, cpu, nodes, queue, hybrid_si
         test = float(cpu)
         test = int(nodes)
         test = int(queue)
+        test = int(time_exp)
     except ValueError:
         print("A numerical value has been wrongly passed")
     else:

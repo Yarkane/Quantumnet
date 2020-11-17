@@ -80,6 +80,9 @@ Using these arguments :
     --cpu : The CPU percentage allowed to the server (default : 1)
     --nodes : The number of clients (default : 1)
     --queue : The maximum size of the queue for the switch - server link (default : 14)
+    --time_exp : The time during which the experiment will be conducted (default : 5)
+    --hybrid_sig : When set, this flag combine the signature algorithm with the corresponding EC via traditional method
+    --hybrid_kex : When set, this flag combine the key exchange algorithm with the corresponding EC via traditional method
 
 To help you with this, you can always use the **Web Interface** included with Mash. To launch the Flask server that will handle your experiments, please use :
 
