@@ -18,20 +18,22 @@ TLSPort = 4433  # Default value
 SupportedSigs = [
     "dilithium2", "dilithium3", "dilithium4",
     "falcon512", "falcon1024",
-    "rainbowlaclassic", "rainbowVcclassic"
+    "rainbowIaclassic", "rainbowVcclassic",
+    "DSA"
 ]
 SupportedKex = [
     "lightsaber", "saber", "firesaber",
     "ntru_hps2048509", "ntru_hps2048677", "ntru_hps4096821", "ntru_hrss701",
     "kyber512", "kyber768", "kyber1024", "kyber90s512", "kyber90s768", "kyber90s1024",
+    "EC"
 ]
 LevelOfSecurity = {
     "dilithium2": 1,
-    "dilithium3": 3,
-    "dilithium4": 5,
+    "dilithium3": 2,
+    "dilithium4": 3,
     "falcon512": 1,
     "falcon1024": 5,
-    "rainbowlaclassic": 1,
+    "rainbowIaclassic": 1,
     "rainbowVcclassic": 5,
     "lightsaber": 1,
     "saber": 3,
@@ -150,7 +152,7 @@ def run():
         hybrid_sig = request.form.get("hybrid_sig")
         if hybrid_sig:
             level = LevelOfSecurity[sig]
-            if level == 1:
+            if level == 1 or level == 2:
                 sig = "p256_" + sig
             elif level == 3:
                 sig = "p384_" + sig

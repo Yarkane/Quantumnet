@@ -11,7 +11,7 @@ wd = os.getcwd()
 SupportedSigs = [
     "dilithium2", "dilithium3", "dilithium4",
     "falcon512", "falcon1024",
-    "rainbowlaclassic", "rainbowVcclassic",
+    "rainbowIaclassic", "rainbowVcclassic",
     "DSA"
 ]
 SupportedKex = [
@@ -22,11 +22,11 @@ SupportedKex = [
 ]
 LevelOfSecurity = {
     "dilithium2": 1,
-    "dilithium3": 3,
-    "dilithium4": 5,
+    "dilithium3": 2,
+    "dilithium4": 3,
     "falcon512": 1,
     "falcon1024": 5,
-    "rainbowlaclassic": 1,
+    "rainbowIaclassic": 1,
     "rainbowVcclassic": 5,
     "lightsaber": 1,
     "saber": 3,
@@ -230,7 +230,7 @@ def main(tls_port, sig, kex, bandwith, delay, loss, cpu, nodes, queue, hybrid_si
         level_sig = LevelOfSecurity[sig]
         if level_sig == 0:
             print("Using a non post quantum signature algorithm.")
-        elif level_sig == 1:
+        elif level_sig == 1 or level_sig == 2:
             print("Using a post quantum signature algorithm, claimed level of security 1.")
             if hybrid_sig:
                 curve = "p256"
