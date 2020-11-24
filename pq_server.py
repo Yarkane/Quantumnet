@@ -1,4 +1,6 @@
-from flask import Flask, request, render_template
+import time
+
+from flask import Flask, request, render_template, jsonify
 import subprocess
 import pq_server_simulation
 import threading
@@ -207,10 +209,84 @@ def run():
 # Python Client Link
 
 @app.route("/controller", methods=['GET'])
-def send():
+def get_args():
     # We just return the algorithms we use.
     # This will be done by sending the experiment_running page.
     return render_template("experiment_running.html", kex=KeyExchangeAlgorithmUsed, sig=SignatureAlgorithmUsed, time=str(Time))
+
+
+@app.route("/controller", methods=['POST'])
+def send_args():
+    global IsAServerRunning, NumberOfNodes, CpuUsage, Bandwith, Delay, LossRate, QueueSize, TLSPort, process, Time
+    # We launch the experiment via a POST JSON request.
+    j = request.get_json()
+    if j is None:
+        return "No JSON", 500
+    if IsAServerRunning is not True:
+        print(j)
+        sig = j["sig"]
+        kex = j["kex"]
+        if sig in SupportedSigs and kex in SupportedKex:
+            hybrid_sig = j["hybrid_sig"]
+            if hybrid_sig:
+                level = LevelOfSecurity[sig]
+                if level == 1 or level == 2:
+                    sig = "p256_" + sig
+                elif level == 3:
+                    sig = "p384_" + sig
+                elif level == 5:
+                    sig = "p521_" + sig
+
+            hybrid_kex = j["hybrid_kex"]
+            if hybrid_kex:
+                level = LevelOfSecurity[kex]
+                if level == 1:
+                    kex = "p256_" + kex
+                elif level == 3:
+                    kex = "p384_" + kex
+                elif level == 5:
+                    kex = "p521_" + kex
+
+            nodes = j["nodes"]
+            NumberOfNodes = nodes
+
+            cpu = j["cpu"]
+            CpuUsage = cpu
+
+            bw = j["bw"]
+            Bandwith = bw
+
+            delay = j["delay"]
+            Delay = delay
+
+            loss = j["loss"]
+            LossRate = loss
+
+            queue = j["queue"]
+            QueueSize = queue
+
+            port = j["port"]
+            TLSPort = port
+
+            time = j["time"]
+            Time = time
+
+            IsAServerRunning = True
+            print("running")
+            print("signature : ", sig)
+            print("key exchange : ", kex)
+            return launch(sig, kex, nodes, cpu, bw, delay, loss, queue, port, time)
+        else:
+            return "server already running", 500
+
+
+@app.route("/result", methods=['GET'])
+def res():
+    global IsAServerRunning
+    # We just return the last results
+    while not isExperimentDone(thread):
+        time.sleep(1)
+    return jsonify(thread.output)
 
 
 # Main
