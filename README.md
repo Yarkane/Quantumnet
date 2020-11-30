@@ -16,7 +16,7 @@ You can download the mininet.org VM, or, if you run an appropriate OS, enter the
     cd mininet
     git checkout -b 2.2.1 2.2.1
     cd ../
-    sudo mininet/util/install.sh
+    sudo mininet/util/install.sh -a
 
 To get the Mash toolkit, type these commands nand it should be fine.
 
