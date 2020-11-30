@@ -49,9 +49,7 @@ mkdir -p pki
 mkdir -p logs
 
 chmod 774 pki
-chmod 774 pki/*
 chmod 774 logs
-chmod 774 logs/*
 chmod 774 liboqs/*
 chmod 774 openssl
 chmod 774 openssl/*
