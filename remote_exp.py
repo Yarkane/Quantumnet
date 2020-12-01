@@ -1,6 +1,6 @@
 import requests
 import time
-import json
+import matplotlib.pyplot as mp
 
 ADDRESS = "http://127.0.0.1:5000"
 
@@ -50,13 +50,24 @@ arguments = {
 }
 
 # Experiment
-results = []
+abcs = []
+ords = []
 
 for loss in [0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.1, 0.15, 0.2]:
     arguments["loss"] = loss
     res = experiment_one_case(ADDRESS, arguments)
-    results.append(dict(arguments, **res))
+    print(res)
+    abcs.append(loss)
+    ords.append(res.json()["nb_connections_realsecs"])
     requests.get(ADDRESS, params={"action": "ok"})
 
-with open('results.json', 'w') as outfile:
-    json.dump(results, outfile)
+if arguments['hybrid_sig']:
+    arguments["sig"] = "hybrid " + arguments["sig"]
+if arguments['hybrid_kex']:
+    arguments["kex"] = "hybrid " + arguments["kex"]
+
+mp.plot(abcs, ords)
+mp.xlabel('Loss percentage')
+mp.ylabel('Connections')
+mp.title(f'{arguments["sig"]} x {arguments["kex"]}')
+mp.show()
