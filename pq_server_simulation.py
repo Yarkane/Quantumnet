@@ -52,7 +52,10 @@ class QuantumTopo(Topo):
         switch1 = self.addSwitch('switch1')
         switch2 = self.addSwitch('switch2')
 
-        appServer = self.addHost('aServer', cls=CPULimitedHost, cpu=cpu_usage)
+        if cpu_usage < 1:
+            appServer = self.addHost('aServer', cls=CPULimitedHost, cpu=cpu_usage)
+        else:
+            appServer = self.addHost('aServer')
         crossServer = self.addHost('cServer')
 
         for i in range(n_nodes):
