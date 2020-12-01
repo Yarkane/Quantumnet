@@ -166,8 +166,11 @@ def s_time(tls_server, sig, kex, time_exp):
 
 def simulate(port, kex, sig, bw=8, delay="10ms", loss=0, cpu_usage=1.0, n_nodes=1, max_queue=14, time_exp=5):
     dumbbell = QuantumTopo(bw=bw, delay=delay, loss=loss, cpu_usage=cpu_usage, n_nodes=n_nodes, max_queue=max_queue)
-    network = Mininet(topo=dumbbell, host=CPULimitedHost, link=TCLink, autoPinCpus=True)
-    network.get("aServer").setCPUs(cores=1)
+    if cpu_usage == 1:
+        network = Mininet(topo=dumbbell, link=TCLink)
+    else:
+        network = Mininet(topo=dumbbell, host=CPULimitedHost, link=TCLink, autoPinCpus=True)
+        network.get("aServer").setCPUs(cores=1)
     network.start()
 
     appServer = network.get('aServer')
