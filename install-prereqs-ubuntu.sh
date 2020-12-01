@@ -45,11 +45,13 @@ make && make install;
 
 cd ../
 
-mkdir -p pki
-mkdir -p logs
+mkdir pki
+mkdir logs
+mkdir results
 
 chmod 774 pki
 chmod 774 logs
+chmod 774 results
 chmod 774 liboqs/*
 chmod 774 openssl
 chmod 774 openssl/*
