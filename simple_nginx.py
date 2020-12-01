@@ -98,7 +98,7 @@ def s_time(tls_server, sig, kex):
 
 def simulate(port, kex, sig):
     dumbbell = DumbbellTopo()
-    network = Mininet(topo=dumbbell, host=CPULimitedHost, link=TCLink, autoPinCpus=True)
+    network = Mininet(topo=dumbbell, link=TCLink)
     network.start()
 
     appClient = network.get('aClient')
