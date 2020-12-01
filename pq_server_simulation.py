@@ -140,7 +140,7 @@ def nginx_setup(addr):
                     f"		ssl_protocols TLSv1.3;\n"
                     f"\n"
                     f"		location / {{\n"
-                    f"			root html;\n"
+                    f"			root {wd}/html;\n"
                     f"			index index.html index.htm;\n"
                     f"		}}\n"
                     f"	}}\n"
@@ -158,13 +158,16 @@ def prepare_PKI(sig):
            f'/server.crt '
 
 
-def s_time(tls_server, sig, kex, time_exp):
+def s_time(tls_server, sig, kex, time_exp, www=False):
     # Returns the command that will launch the s_time command for the nginx server
-    return f"openssl/apps/openssl s_time -connect {tls_server} " \
+    ret = f"openssl/apps/openssl s_time -connect {tls_server} " \
            f"-CAfile CA/{sig}_CA.crt -curves {kex} -new -time {str(time_exp)}"
+    if www:
+        ret += " -www /index.html"
+    return ret
 
 
-def simulate(port, kex, sig, bw=8, delay="10ms", loss=0, cpu_usage=1.0, n_nodes=1, max_queue=14, time_exp=5):
+def simulate(port, kex, sig, bw=8, delay="10ms", loss=0, cpu_usage=1.0, n_nodes=1, max_queue=14, time_exp=5, www=False):
     dumbbell = QuantumTopo(bw=bw, delay=delay, loss=loss, cpu_usage=cpu_usage, n_nodes=n_nodes, max_queue=max_queue)
     if cpu_usage == 1:
         network = Mininet(topo=dumbbell, link=TCLink)
@@ -194,9 +197,9 @@ def simulate(port, kex, sig, bw=8, delay="10ms", loss=0, cpu_usage=1.0, n_nodes=
     for i in range(n_nodes - 1):
         app_client = network.get('aClient_' + str(i))
         if i != n_nodes - 1:
-            app_client.cmd(s_time(addr, sig, kex, time_exp) + " &")
+            app_client.cmd(s_time(addr, sig, kex, time_exp, www) + " &")
     last_client = network.get('aClient_' + str(n_nodes - 1))
-    ret = last_client.cmd(s_time(addr, sig, kex, time_exp))
+    ret = last_client.cmd(s_time(addr, sig, kex, time_exp, www))
     print(ret)
 
     appServer.cmd("sudo " + wd + "/nginx/sbin/nginx -s stop")
@@ -204,7 +207,7 @@ def simulate(port, kex, sig, bw=8, delay="10ms", loss=0, cpu_usage=1.0, n_nodes=
     return parse_return(ret)
 
 
-# simulate(port, kex, sig, bw=8, delay="10ms", loss=0, cpu_usage=1, n_nodes=1, max_queue=14)
+# simulate(port, kex, sig, bw=8, delay="10ms", loss=0, cpu_usage=1, n_nodes=1, max_queue=14) 
 @click.command()
 @click.option('--tls_port', default="4433", help="The port of the TLS server")
 @click.option('--sig', default="dilithium2", help="Use this to specify a signature algorithm.")
@@ -218,7 +221,8 @@ def simulate(port, kex, sig, bw=8, delay="10ms", loss=0, cpu_usage=1.0, n_nodes=
 @click.option('--time_exp', default="5", help="The time during which the experiment will be conducted.")
 @click.option('--hybrid_sig', is_flag=True, help="To combine the signature algorithm with the corresponding EC.")
 @click.option('--hybrid_kex', is_flag=True, help="To combine the key exchange algorithm with the corresponding EC.")
-def main(tls_port, sig, kex, bandwith, delay, loss, cpu, nodes, queue, time_exp, hybrid_sig, hybrid_kex):
+@click.option('--www', is_flag=True, help="To download the PQ Wikipedia webpage after each handshake.")
+def main(tls_port, sig, kex, bandwith, delay, loss, cpu, nodes, queue, time_exp, hybrid_sig, hybrid_kex, www):
     if sig not in SupportedSigs:
         print("Signature algorithm not supported.")
     elif kex not in SupportedKex:
@@ -279,7 +283,7 @@ def main(tls_port, sig, kex, bandwith, delay, loss, cpu, nodes, queue, time_exp,
                 print("The key exchange will be hybrid, with an Elliptic Curve" + curve + " of same level.")
                 kex = curve + "_" + kex
         os.system("mn -c")
-        ret = simulate(tls_port, kex, sig, int(bandwith), delay, int(loss), float(cpu), int(nodes), int(queue))
+        ret = simulate(tls_port, kex, sig, int(bandwith), delay, int(loss), float(cpu), int(nodes), int(queue), time_exp, www)
         print(ret)
 
 

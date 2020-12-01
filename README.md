@@ -83,6 +83,7 @@ Using these arguments :
     --time_exp : The time during which the experiment will be conducted (default : 5)
     --hybrid_sig : When set, this flag combine the signature algorithm with the corresponding EC via traditional method
     --hybrid_kex : When set, this flag combine the key exchange algorithm with the corresponding EC via traditional method
+    --www : When set, this flag makes the s_time command download a webpage at each Handshake. The webpage is a wikipedia page about PQ algorithms.
 
 To help you with this, you can always use the **Web Interface** included with Mash. To launch the Flask server that will handle your experiments, please use :
 
