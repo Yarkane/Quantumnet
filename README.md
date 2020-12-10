@@ -76,7 +76,7 @@ Using these arguments :
     --kex : The Key Exchange algorithm you want to benchmark (default : saber)
     --bandwith : The bandwith of the switch - server link in Mbps (default : 8)
     --delay : The delay of the switch - server link, in the format ___ms (default : 10ms)
-    --loss : The loss rate of the switch - server link (default : 0)
+    --loss : The loss rate of the switch - server link, expressed in % (default : 0)
     --cpu : The CPU percentage allowed to the server (default : 1)
     --nodes : The number of clients (default : 1)
     --queue : The maximum size of the queue for the switch - server link (default : 14)

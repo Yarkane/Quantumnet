@@ -21,9 +21,9 @@ arguments = {
 
 results = []
 
-for nodes in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]:
+for nodes in [2, 4, 8, 16]:
     arguments["nodes"] = nodes
-    for loss in [0.01, 0.02, 0.03, 0.04, 0.05, 0.08, 0.1, 0.15]:
+    for loss in [1, 2, 3, 4, 5, 8, 10, 15, 20]:
         arguments["loss"] = loss
         res = pq_server_simulation.simulate("4433", arguments["kex"], arguments["sig"],
                                             arguments["bandwith"], arguments["delay"], arguments["loss"],
