@@ -12,7 +12,10 @@ SupportedSigs = [
     "dilithium2", "dilithium3", "dilithium4",
     "falcon512", "falcon1024",
     "rainbowIaclassic", "rainbowVcclassic",
-    "DSA"
+    "DSA",
+    # ALGS TO ACTIVATE IN OPENSSL
+    # see https://github.com/open-quantum-safe/openssl/wiki/Using-liboqs-algorithms-not-in-the-fork
+    "picnic3l1", "picnic3l3", "picnic3l5"
 ]
 SupportedKex = [
     "lightsaber", "saber", "firesaber",
@@ -42,7 +45,13 @@ LevelOfSecurity = {
     "kyber90s768": 3,
     "kyber90s1024": 5,
     "DSA": 0,
-    "EC": 0
+    "EC": 0,
+
+    # ALGS TO ACTIVATE IN OPENSSL
+    # see https://github.com/open-quantum-safe/openssl/wiki/Using-liboqs-algorithms-not-in-the-fork
+    "picnic3l1": 1,
+    "picnic3l3": 3,
+    "picnic3l5": 5
 }
 
 
@@ -140,7 +149,7 @@ def nginx_setup(addr):
                     f"		ssl_protocols TLSv1.3;\n"
                     f"\n"
                     f"		location / {{\n"
-                    f"			root {wd}/html;\n"
+                    f"			root html;\n"
                     f"			index index.html index.htm;\n"
                     f"		}}\n"
                     f"	}}\n"
@@ -163,7 +172,7 @@ def s_time(tls_server, sig, kex, time_exp, www=False):
     ret = f"openssl/apps/openssl s_time -connect {tls_server} " \
            f"-CAfile CA/{sig}_CA.crt -curves {kex} -new -time {str(time_exp)}"
     if www:
-        ret += " -www /index.html"
+        ret += " -www /"
     return ret
 
 
@@ -207,7 +216,7 @@ def simulate(port, kex, sig, bw=8, delay="10ms", loss=0, cpu_usage=1.0, n_nodes=
     return parse_return(ret)
 
 
-# simulate(port, kex, sig, bw=8, delay="10ms", loss=0, cpu_usage=1, n_nodes=1, max_queue=14) 
+# simulate(port, kex, sig, bw=8, delay="10ms", loss=0, cpu_usage=1, n_nodes=1, max_queue=14)
 @click.command()
 @click.option('--tls_port', default="4433", help="The port of the TLS server")
 @click.option('--sig', default="dilithium2", help="Use this to specify a signature algorithm.")
