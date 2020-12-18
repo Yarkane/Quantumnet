@@ -29,6 +29,7 @@ ninja && ninja install
 cd ../../openssl
 ./Configure no-shared linux-x86_64 -lm
 make
+cd ../
 
 # build nginx
 wget nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && tar -zxvf nginx-${NGINX_VERSION}.tar.gz;
@@ -52,6 +53,7 @@ mkdir results
 chmod 774 pki
 chmod 774 logs
 chmod 774 results
+chmod 774 liboqs
 chmod 774 liboqs/*
 chmod 774 openssl
 chmod 774 openssl/*
