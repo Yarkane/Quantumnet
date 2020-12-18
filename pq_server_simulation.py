@@ -21,7 +21,7 @@ SupportedKex = [
     "lightsaber", "saber", "firesaber",
     "ntru_hps2048509", "ntru_hps2048677", "ntru_hps4096821", "ntru_hrss701",
     "kyber512", "kyber768", "kyber1024", "kyber90s512", "kyber90s768", "kyber90s1024",
-    "EC"
+    "RSA"
 ]
 LevelOfSecurity = {
     "dilithium2": 1,
@@ -45,7 +45,7 @@ LevelOfSecurity = {
     "kyber90s768": 3,
     "kyber90s1024": 5,
     "DSA": 0,
-    "EC": 0,
+    "RSA": 0,
 
     # ALGS TO ACTIVATE IN OPENSSL
     # see https://github.com/open-quantum-safe/openssl/wiki/Using-liboqs-algorithms-not-in-the-fork
@@ -170,9 +170,11 @@ def prepare_PKI(sig):
 def s_time(tls_server, sig, kex, time_exp, www=False):
     # Returns the command that will launch the s_time command for the nginx server
     ret = f"openssl/apps/openssl s_time -connect {tls_server} " \
-           f"-CAfile CA/{sig}_CA.crt -curves {kex} -new -time {str(time_exp)}"
+           f"-CAfile CA/{sig}_CA.crt -new -time {str(time_exp)}"
     if www:
         ret += " -www /"
+    if kex != "RSA":
+        ret += f' -curves {kex} '
     return ret
 
 
