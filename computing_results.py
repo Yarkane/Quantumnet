@@ -53,7 +53,7 @@ def get_rtt(experiment):
     return float(experiment["nb_realsecs"]) / float(experiment["nb_connections_realsecs"])
 
 
-def make_filename(sig, kex, h_sig=False, h_kex=False):
+def make_filename(sig, kex, h_sig=False, h_kex=False, new=False):
     """
     sig : dil2, dil4, fal512, fal1024, rainbowIa, rainbowVc
     kex : lightsaber, saber, firesaber, kyber512, kyber768, kyber1024, ntru1, ntru3, ntru5
@@ -63,7 +63,11 @@ def make_filename(sig, kex, h_sig=False, h_kex=False):
         hybrid_s = "hybrid_"
     if h_kex:
         hybrid_k = "hybrid_"
-    return f'results/results_ALGS_{hybrid_s}{sig}_{hybrid_k}{kex}_VAR_nodes_loss.json'
+    if new:
+        folder = "results2"
+    else:
+        folder = "results"
+    return f'{folder}/results_ALGS_{hybrid_s}{sig}_{hybrid_k}{kex}_VAR_nodes_loss.json'
 
 
 def get_mean_RTT(data, nodes):
@@ -96,35 +100,35 @@ Hdil2_Hlightsaber = get_experiments(make_filename("dil2", "lightsaber", h_sig=Tr
 """
 L1_loss_graph("2", dil2_lightsaber,
               "Handshake and page download time\nDilithium2 + Lightsaber, 2 nodes",
-              "figures/LOSS_dil2_lightsaber_2n")
+              "figures_firt_exps/LOSS_dil2_lightsaber_2n")
 
 L1_loss_graph("2", Hdil2_lightsaber,
               "Handshake and page download time\nHybrid Dilithium2 + Lightsaber, 2 nodes",
-              "figures/LOSS_hybrid_dil2_lightsaber_2n")
+              "figures_firt_exps/LOSS_hybrid_dil2_lightsaber_2n")
 
 L1_loss_graph("2", dil2_Hlightsaber,
               "Handshake and page download time\nDilithium2 + Hybrid Lightsaber, 2 nodes",
-              "figures/LOSS_dil2_hybrid_lightsaber_2n")
+              "figures_firt_exps/LOSS_dil2_hybrid_lightsaber_2n")
 
 L1_loss_graph("2", Hdil2_Hlightsaber,
               "Handshake and page download time\nHybrid Dilithium2 + Hybrid Lightsaber, 2 nodes",
-              "figures/LOSS_hybrid_dil2_hybrid_lightsaber_2n")
+              "figures_firt_exps/LOSS_hybrid_dil2_hybrid_lightsaber_2n")
 
 L1_loss_graph("16", dil2_lightsaber,
               "Handshake and page download time\nDilithium2 + Lightsaber, 16 nodes",
-              "figures/LOSS_dil2_lightsaber_16n")
+              "figures_firt_exps/LOSS_dil2_lightsaber_16n")
 
 L1_loss_graph("16", Hdil2_lightsaber,
               "Handshake and page download time\nHybrid Dilithium2 + Lightsaber, 16 nodes",
-              "figures/LOSS_hybrid_dil2_lightsaber_16n")
+              "figures_firt_exps/LOSS_hybrid_dil2_lightsaber_16n")
 
 L1_loss_graph("16", dil2_Hlightsaber,
               "Handshake and page download time\nDilithium2 + Hybrid Lightsaber, 16 nodes",
-              "figures/LOSS_dil2_hybrid_lightsaber_16n")
+              "figures_firt_exps/LOSS_dil2_hybrid_lightsaber_16n")
 
 L1_loss_graph("16", Hdil2_Hlightsaber,
               "Handshake and page download time\nHybrid Dilithium2 + Hybrid Lightsaber, 16 nodes",
-              "figures/LOSS_hybrid_dil2_hybrid_lightsaber_16n")
+              "figures_firt_exps/LOSS_hybrid_dil2_hybrid_lightsaber_16n")
 """
 # Nodes evolution
 
@@ -145,19 +149,19 @@ def nodes_graph(data, title, filename):
 """
 nodes_graph(dil2_lightsaber,
             "Handshake and page download time\nDilithium2 + Lightsaber",
-            "figures/NODES_dil2_lightsaber")
+            "figures_firt_exps/NODES_dil2_lightsaber")
 
 nodes_graph(Hdil2_lightsaber,
             "Handshake and page download time\nHybrid Dilithium2 + Lightsaber",
-            "figures/NODES_hybrid_dil2_lightsaber")
+            "figures_firt_exps/NODES_hybrid_dil2_lightsaber")
 
 nodes_graph(dil2_Hlightsaber,
             "Handshake and page download time\nDilithium2 + Hybrid Lightsaber",
-            "figures/NODES_dil2_hybrid_lightsaber")
+            "figures_firt_exps/NODES_dil2_hybrid_lightsaber")
 
 nodes_graph(Hdil2_Hlightsaber,
             "Handshake and page download time\nHybrid Dilithium2 + Hybrid Lightsaber",
-            "figures/NODES_hybrid_dil2_hybrid_lightsaber")
+            "figures_firt_exps/NODES_hybrid_dil2_hybrid_lightsaber")
 """
 # --
 
@@ -168,19 +172,19 @@ Hdil4_Hsaber = get_experiments(make_filename("dil4", "saber", h_sig=True, h_kex=
 """
 nodes_graph(dil4_saber,
             "Handshake and page download time\nDilithium4 + Saber",
-            "figures/NODES_dil4_saber")
+            "figures_firt_exps/NODES_dil4_saber")
 
 nodes_graph(Hdil4_saber,
             "Handshake and page download time\nHybrid Dilithium4 + Saber",
-            "figures/NODES_hybrid_dil4_saber")
+            "figures_firt_exps/NODES_hybrid_dil4_saber")
 
 nodes_graph(dil4_Hsaber,
             "Handshake and page download time\nDilithium4 + Hybrid Saber",
-            "figures/NODES_dil4_hybrid_saber")
+            "figures_firt_exps/NODES_dil4_hybrid_saber")
 
 nodes_graph(Hdil4_Hsaber,
             "Handshake and page download time\nHybrid Dilithium4 + Hybrid Saber",
-            "figures/NODES_hybrid_dil4_hybrid_saber")
+            "figures_firt_exps/NODES_hybrid_dil4_hybrid_saber")
 """
 # --
 
@@ -191,7 +195,7 @@ fal1024_Hfiresaber = get_experiments(make_filename("fal1024", "firesaber", h_kex
 """
 nodes_graph(fal1024_Hfiresaber,
             "Handshake and page download time\nFalcon1024 + Hybrid Firesaber",
-            "figures/NODES_fal1024_hybrid_firesaber")
+            "figures_firt_exps/NODES_fal1024_hybrid_firesaber")
 """
 # Comparing blank / hybrid / double hybrid
 
@@ -221,11 +225,11 @@ def hybrid_graph(data_qq, data_hq, data_qh, data_hh, nodes, title, filename, kex
 
 hybrid_graph(dil2_lightsaber, Hdil2_lightsaber, dil2_Hlightsaber, Hdil2_Hlightsaber, "8",
              "Hybrid and non-hybrid comparison\nDilithium2 + Lightsaber, 8 nodes",
-             "figures/HYBRID_dil2_lightsaber", "Dilithium2", "Lightsaber")
+             "figures_firt_exps/HYBRID_dil2_lightsaber", "Dilithium2", "Lightsaber")
 
 hybrid_graph(dil4_saber, Hdil4_saber, dil4_Hsaber, Hdil4_Hsaber, "8",
              "Hybrid and non-hybrid comparison\nDilithium4 + Saber, 8 nodes",
-             "figures/HYBRID_dil4_saber", "Dilithium4", "Saber")
+             "figures_firt_exps/HYBRID_dil4_saber", "Dilithium4", "Saber")
 """
 fal1024_ntru5 = get_experiments(make_filename("fal1024", "ntru5"))
 Hfal1024_ntru5 = get_experiments(make_filename("fal1024", "ntru5", h_sig=True))
@@ -234,7 +238,7 @@ Hfal1024_Hntru5 = get_experiments(make_filename("fal1024", "ntru5", h_sig=True, 
 
 hybrid_graph(fal1024_ntru5, Hfal1024_ntru5, fal1024_Hntru5, Hfal1024_Hntru5, "8",
              "Hybrid and non-hybrid comparison\nFalcon1024 + NTRU HPS4096821, 8 nodes",
-             "figures/HYBRID_fal1024_ntru5", "Falcon1024", "L5 NTRU")
+             "figures_firt_exps/HYBRID_fal1024_ntru5", "Falcon1024", "L5 NTRU")
 
 fal1024_lightsaber = get_experiments(make_filename("fal1024", "lightsaber"))
 Hfal1024_lightsaber = get_experiments(make_filename("fal1024", "lightsaber", h_sig=True))
@@ -243,7 +247,7 @@ Hfal1024_Hlightsaber = get_experiments(make_filename("fal1024", "lightsaber", h_
 
 hybrid_graph(fal1024_lightsaber, Hfal1024_lightsaber, fal1024_Hlightsaber, Hfal1024_Hlightsaber, "8",
              "Hybrid and non-hybrid comparison\nFalcon1024 + Lightsaber, 8 nodes",
-             "figures/HYBRID_fal1024_lightsaber", "Falcon1024", "lightsaber")
+             "figures_firt_exps/HYBRID_fal1024_lightsaber", "Falcon1024", "lightsaber")
 """
 dil2_ntru1 = get_experiments(make_filename("dil2", "ntru1"))
 Hdil2_ntru1 = get_experiments(make_filename("dil2", "ntru1", h_sig=True))
@@ -252,7 +256,7 @@ Hdil2_Hntru1 = get_experiments(make_filename("dil2", "ntru1", h_sig=True, h_kex=
 
 hybrid_graph(dil2_ntru1, Hdil2_ntru1, dil2_Hntru1, Hdil2_Hntru1, "8",
              "Hybrid and non-hybrid comparison\nDilithium2 + NTRU HPS2048509, 8 nodes",
-             "figures/HYBRID_dil2_ntru1", "Dilithium2", "L1 NTRU")
+             "figures_firt_exps/HYBRID_dil2_ntru1", "Dilithium2", "L1 NTRU")
 
 # L1 duets
 x, y = [], []
@@ -272,7 +276,7 @@ plt.ylabel("Mean RTT per handshake (seconds)")
 plt.ylim(bottom=0.14)
 plt.ylim(top=0.18)
 plt.title("L1xL1 schemes comparison, 8 nodes")
-plt.savefig("figures/ALGS_L1_L1")
+plt.savefig("figures_firt_exps/ALGS_L1_L1")
 plt.show()
 
 # L3 duets
@@ -294,7 +298,7 @@ plt.ylabel("Mean RTT per handshake (seconds)")
 plt.ylim(bottom=0.20)
 plt.ylim(top=0.24)
 plt.title("L3xL3 schemes comparison, 8 nodes")
-plt.savefig("figures/ALGS_L3_L3")
+plt.savefig("figures_firt_exps/ALGS_L3_L3")
 plt.show()
 
 # L5 duets
@@ -313,7 +317,7 @@ plt.ylabel("Mean RTT per handshake (seconds)")
 plt.ylim(bottom=0.16)
 plt.ylim(top=0.18)
 plt.title("L5xL5 schemes comparison, 8 nodes")
-plt.savefig("figures/ALGS_L5_L5")
+plt.savefig("figures_firt_exps/ALGS_L5_L5")
 plt.show()
 
 # L1xL3 duets
@@ -336,7 +340,7 @@ plt.ylabel("Mean RTT per handshake (seconds)")
 plt.ylim(bottom=0.12)
 plt.ylim(top=1.5)
 plt.title("L1xL3 schemes comparison, 8 nodes")
-plt.savefig("figures/ALGS_L1_L3")
+plt.savefig("figures_firt_exps/ALGS_L1_L3")
 plt.show()
 
 # L1xL5 duets
@@ -359,5 +363,5 @@ plt.ylabel("Mean RTT per handshake (seconds)")
 plt.ylim(bottom=0.12)
 plt.ylim(top=15)
 plt.title("L1xL5 schemes comparison, 8 nodes")
-plt.savefig("figures/ALGS_L1_L5")
+plt.savefig("figures_firt_exps/ALGS_L1_L5")
 plt.show()
