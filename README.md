@@ -1,6 +1,6 @@
 ## Introduction
 
-Mash is a toolkit which contains multiple tools to test and benchmark the Post Quantum security algorithms.
+Quantumnet is a toolkit which contains multiple tools to test and benchmark the Post Quantum security algorithms.
 It is mainly based on OQS-Openssl and Mininet.
 OQS-OpenSSL is a OpenSSL fork, maintained by the Open Quantum Safe team which goal is to make public the research and the evolutions in the Post-Quantum Security Algorithm field.
 Mininet is a tool available for certain linux distributions that allows to create nodes and switches, make them communicate and most importantly, apply constraints on the links between them.
@@ -18,7 +18,7 @@ You can download the mininet.org VM, or, if you run an appropriate OS, enter the
     cd ../
     sudo mininet/util/install.sh -a
 
-To get the Mash toolkit, type these commands nand it should be fine.
+To get the Quantumnet toolkit, type these commands nand it should be fine.
 
     git clone git@gitlab.epfl.ch:sjacquie/post-quantum-benchmark.git
     sudo ./install-prereqs-ubuntu.sh
@@ -51,7 +51,7 @@ Here is the list of the arguments you can pass to client.py :
 ## A simple Mininet server
 
 Then, you will want to test if the Mininet installation is working fine.
-Mash is provided with a simple "client-server" like Mininet workbench which will just create a nginx server and a client that will run a stime test from OpenSSL on the server.
+Quantumnet is provided with a simple "client-server" like Mininet workbench which will just create a nginx server and a client that will run a stime test from OpenSSL on the server.
 
 Everything runs in this command :
 
@@ -85,7 +85,7 @@ Using these arguments :
     --hybrid_kex : When set, this flag combine the key exchange algorithm with the corresponding EC via traditional method
     --www : When set, this flag makes the s_time command download a webpage at each Handshake. The webpage is a wikipedia page about PQ algorithms.
 
-To help you with this, you can always use the **Web Interface** included with Mash. To launch the Flask server that will handle your experiments, please use :
+To help you with this, you can always use the **Web Interface** included with Quantumnet. To launch the Flask server that will handle your experiments, please use :
 
     sudo python3 pq_server.py
 

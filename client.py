@@ -4,7 +4,7 @@ from requests_html import HTMLSession
 import re
 
 # The program does provide the user a command with multiple arguments.
-# It has to test the TLS server setup by Mash.
+# It has to test the TLS server setup by Quantumnet.
 # We get the algorithms to use by asking the flask server
 
 SupportedSigs = [
