@@ -110,10 +110,3 @@ Supported key exchange algorithms :
     lightsaber, saber, firesaber
     ntru_hps2048509, ntru_hps2048677, ntru_hps4096821, ntru_hrss701
     kyber512, kyber768, kyber1024, kyber90s512, kyber90s768, kyber90s1024
-
-
-## TODO
-
-Create Benchmarks is easy now, but the output is not so great. Find some useful data to print with the web interface, or use matplotlib to construct graphes !
-
---
