@@ -27,7 +27,7 @@ arguments["sig"] = "DSA"
 arguments["kex"] = "RSA"
 
 
-for nodes in [8, 12, 16, 24, 30, 36, 42]:
+for nodes in [2, 4, 8, 12, 16, 24, 30, 36, 42]:
     arguments["nodes"] = nodes
     for loss in [0, 1, 2, 5, 10, 15, 20]:
         arguments["loss"] = loss
@@ -157,7 +157,7 @@ arguments["kex"] = "saber"
 
 for nodes in [8]:
     arguments["nodes"] = nodes
-    for loss in [1, 2, 3, 5, 7, 10, 12, 15, 18, 20]:
+    for loss in [0]:
         arguments["loss"] = loss
         print(f"algs : {arguments['sig']},{arguments['kex']} | nodes : {nodes} | loss : {loss}")
         res = pq_server_simulation.simulate(arguments["tls_port"], arguments["kex"], arguments["sig"],
@@ -183,8 +183,7 @@ arguments["kex"] = "firesaber"
 
 for nodes in [8]:
     arguments["nodes"] = nodes
-    for loss in [1, 2, 3, 5, 7, 10, 12, 15, 18, 20]:
-        arguments["loss"] = loss
+    for loss in [0]:
         print(f"algs : {arguments['sig']},{arguments['kex']} | nodes : {nodes} | loss : {loss}")
         res = pq_server_simulation.simulate(arguments["tls_port"], arguments["kex"], arguments["sig"],
                                             arguments["bandwith"], arguments["delay"], arguments["loss"],
@@ -209,9 +208,9 @@ arguments["sig"] = "picnic3l1"
 arguments["kex"] = "saber"
 
 
-for nodes in [8]:
+for nodes in [8, 12, 16, 24, 30, 36, 42]:
     arguments["nodes"] = nodes
-    for loss in [1, 2, 3, 5, 7, 10, 12, 15, 18, 20]:
+    for loss in [0]:
         arguments["loss"] = loss
         print(f"algs : {arguments['sig']},{arguments['kex']} | nodes : {nodes} | loss : {loss}")
         res = pq_server_simulation.simulate(arguments["tls_port"], arguments["kex"], arguments["sig"],
@@ -235,9 +234,9 @@ arguments["sig"] = "p256_picnic3l1"
 arguments["kex"] = "saber"
 
 
-for nodes in [8]:
+for nodes in [8, 12, 16, 24, 30, 36, 42]:
     arguments["nodes"] = nodes
-    for loss in [1, 2, 3, 5, 7, 10, 12, 15, 18, 20]:
+    for loss in [0]:
         arguments["loss"] = loss
         print(f"algs : {arguments['sig']},{arguments['kex']} | nodes : {nodes} | loss : {loss}")
         res = pq_server_simulation.simulate(arguments["tls_port"], arguments["kex"], arguments["sig"],
@@ -261,9 +260,9 @@ arguments["sig"] = "picnic3l3"
 arguments["kex"] = "saber"
 
 
-for nodes in [8]:
+for nodes in [8, 12, 16, 24, 30, 36, 42]:
     arguments["nodes"] = nodes
-    for loss in [1, 2, 3, 5, 7, 10, 12, 15, 18, 20]:
+    for loss in [0]:
         arguments["loss"] = loss
         print(f"algs : {arguments['sig']},{arguments['kex']} | nodes : {nodes} | loss : {loss}")
         res = pq_server_simulation.simulate(arguments["tls_port"], arguments["kex"], arguments["sig"],
@@ -287,9 +286,9 @@ arguments["sig"] = "p384_picnic3l3"
 arguments["kex"] = "saber"
 
 
-for nodes in [8]:
+for nodes in [8, 12, 16, 24, 30, 36, 42]:
     arguments["nodes"] = nodes
-    for loss in [1, 2, 3, 5, 7, 10, 12, 15, 18, 20]:
+    for loss in [0]:
         arguments["loss"] = loss
         print(f"algs : {arguments['sig']},{arguments['kex']} | nodes : {nodes} | loss : {loss}")
         res = pq_server_simulation.simulate(arguments["tls_port"], arguments["kex"], arguments["sig"],
@@ -312,9 +311,9 @@ results = []
 arguments["sig"] = "picnic3l5"
 arguments["kex"] = "saber"
 
-for nodes in [8]:
+for nodes in [8, 12, 16, 24, 30, 36, 42]:
     arguments["nodes"] = nodes
-    for loss in [1, 2, 3, 5, 7, 10, 12, 15, 18, 20]:
+    for loss in [0]:
         arguments["loss"] = loss
         print(f"algs : {arguments['sig']},{arguments['kex']} | nodes : {nodes} | loss : {loss}")
         res = pq_server_simulation.simulate(arguments["tls_port"], arguments["kex"], arguments["sig"],
@@ -337,9 +336,9 @@ results = []
 arguments["sig"] = "p521_picnic3l5"
 arguments["kex"] = "saber"
 
-for nodes in [8]:
+for nodes in [8, 12, 16, 24, 30, 36, 42]:
     arguments["nodes"] = nodes
-    for loss in [1, 2, 3, 5, 7, 10, 12, 15, 18, 20]:
+    for loss in [0]:
         arguments["loss"] = loss
         print(f"algs : {arguments['sig']},{arguments['kex']} | nodes : {nodes} | loss : {loss}")
         res = pq_server_simulation.simulate(arguments["tls_port"], arguments["kex"], arguments["sig"],
