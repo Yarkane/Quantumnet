@@ -13,7 +13,7 @@ apt install build-essential \
             python3 \
             wget;
 
-git clone --single-branch https://github.com/open-quantum-safe/liboqs
+#git clone --single-branch https://github.com/open-quantum-safe/liboqs
 #git clone --single-branch https://github.com/open-quantum-safe/openssl
 
 export OPENSSL_ROOT_DIR=/opt/openssl
@@ -28,6 +28,8 @@ ninja && ninja install
 # build OQS-OpenSSL
 cd ../../openssl
 ./Configure no-shared linux-x86_64 -lm
+python3 oqs-template/generate.py
+make generate_crypto_objects
 make
 cd ../
 
@@ -52,7 +54,6 @@ mkdir results
 
 chmod 774 pki
 chmod 774 logs
-chmod 774 results
 chmod 774 liboqs
 chmod 774 liboqs/*
 chmod 774 openssl
