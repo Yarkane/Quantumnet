@@ -14,7 +14,6 @@ apt install build-essential \
             wget;
 
 git clone --single-branch https://github.com/open-quantum-safe/liboqs
-git clone --single-branch https://github.com/open-quantum-safe/openssl
 
 export OPENSSL_ROOT_DIR=/opt/openssl
 NGINX_VERSION=1.17.5
