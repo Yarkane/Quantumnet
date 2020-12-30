@@ -235,19 +235,20 @@ def hybrid_graph(data_qq, data_hq, data_qh, data_hh, nodes, title, filename, kex
     if all_same:
         f = get_mean_RTT
     else:
-        f = get_rtt_min_loss
+        def f(a, b):
+            return get_rtt_min_loss(a, b)[0]
 
     x.append(kex + "\n" + sig)
-    y.append(f(data_qq, nodes)[0])
+    y.append(f(data_qq, nodes))
 
     x.append("Hybrid " + kex + "\n" + sig)
-    y.append(f(data_hq, nodes)[0])
+    y.append(f(data_hq, nodes))
 
     x.append(kex + "\n" + "Hybrid " + sig)
-    y.append(f(data_qh, nodes)[0])
+    y.append(f(data_qh, nodes))
 
     x.append("Hybrid " + kex + "\n" + "Hybrid " + sig)
-    y.append(f(data_hh, nodes)[0])
+    y.append(f(data_hh, nodes))
 
     plt.bar(x, y)
     plt.ylabel("Mean time per handshake + download (seconds)")
@@ -278,7 +279,7 @@ HrainVc_Hkyber1024 = get_experiments(make_filename("rainbowVc", "kyber1024", new
 
 hybrid_graph(rainVc_kyber1024, HrainVc_kyber1024, rainVc_Hkyber1024, HrainVc_Hkyber1024, "8",
              "Hybrid comparisons for low loss rate values and 8 nodes\nRainbowVc + Kyber1024 (L1 schemes)",
-             "figures/HYBRID_rainbowVc_kyber1024", "Kyber1024", "RainbowVc", all_same=False, bot=10, top=16)
+             "figures/HYBRID_rainbowVc_kyber1024", "Kyber1024", "RainbowVc", all_same=True, bot=13, top=20)
 
 # Picnic Comparisons
 
@@ -312,12 +313,18 @@ old_dil2_saber = get_experiments(make_filename("dil2", "saber", new=False))
 old_dil2_firesaber = get_experiments(make_filename("dil2", "firesaber", new=False))
 old_dil2_kyber512 = get_experiments(make_filename("dil2", "kyber512", new=False))
 old_dil2_ntru1 = get_experiments(make_filename("dil2", "ntru1", new=False))
+dil2_kyber768 = get_experiments(make_filename("dil2", "kyber768", new=True))
+dil2_kyber1024 = get_experiments(make_filename("dil2", "kyber1024", new=True))
+dil2_ntru5 = get_experiments(make_filename("dil2", "ntru5", new=True))
 
 x, y = [], []
-for exp in [(old_dil2_lightsaber, "lightsaber"), (old_dil2_saber, "saber"), (old_dil2_firesaber, "firesaber"), (old_dil2_kyber512, "kyber512"), (old_dil2_ntru1, "ntru1")]:
-    res = get_mean_RTT(exp[0], "8")
-    plt.scatter(ciphertext_or_signature_sizes[exp[1]], res)
-    plt.annotate(exp[1], (ciphertext_or_signature_sizes[exp[1]], res))
+for exp in [(old_dil2_lightsaber, "lightsaber"), (old_dil2_saber, "saber"), (old_dil2_firesaber, "firesaber"),
+            (old_dil2_kyber512, "kyber512"), (old_dil2_ntru1, "ntru1"), (dil2_kyber768, "kyber768"),
+            (dil2_kyber1024, "kyber1024"), (dil2_ntru5, "ntru5")]:
+    res = get_rtt_min_loss(exp[0], "8")
+    print(res[1])
+    plt.scatter(ciphertext_or_signature_sizes[exp[1]], res[0])
+    plt.annotate(exp[1], (ciphertext_or_signature_sizes[exp[1]], res[0]))
 
 plt.plot(x, y)
 plt.xlabel("Ciphertext size in Bytes")
@@ -327,17 +334,24 @@ plt.grid()
 plt.savefig("figures/CIPHERTEXT_LOW_LOSS")
 plt.show()
 
-# LOW LOSS, SIGNATURE SIZE
+# LOW LOSS, SIGNATURE SIZE, 8 nodes
 
 old_dil4_saber = get_experiments(make_filename("dil4", "saber", new=False))
 old_fal512_saber = get_experiments(make_filename("fal512", "saber", new=False))
 old_rainbowIa_saber = get_experiments(make_filename("rainbowIa", "saber", new=False))
+dil3_saber = get_experiments(make_filename("dil3", "saber", new=True))
+fal1024_saber = get_experiments(make_filename("fal1024", "saber", new=True))
+rainbowVc_saber = get_experiments(make_filename("rainbowVc", "saber", new=True))
 
 x, y = [], []
-for exp in [(old_dil2_saber, "dil2"), (old_dil4_saber, "dil4"), (old_fal512_saber, "falcon512"), (old_rainbowIa_saber, "rainbowIa")]:
-    res = get_mean_RTT(exp[0], "8")
-    plt.scatter(ciphertext_or_signature_sizes[exp[1]], res)
-    plt.annotate(exp[1], (ciphertext_or_signature_sizes[exp[1]], res))
+for exp in [(old_dil2_saber, "dil2"), (old_dil4_saber, "dil4"), (old_fal512_saber, "falcon512"),
+            (old_rainbowIa_saber, "rainbowIa"),
+            (picnic1_saber, "picnic3l1"), (picnic3_saber, "picnic3l3"), (picnic5_saber, "picnic3l5"),
+            (fal1024_saber, "falcon1024"), (dil3_saber, "dil3")]:
+    res = get_rtt_min_loss(exp[0], "8")
+    print(res[1])
+    plt.scatter(ciphertext_or_signature_sizes[exp[1]], res[0])
+    plt.annotate(exp[1], (ciphertext_or_signature_sizes[exp[1]], res[0]))
 
 plt.plot(x, y)
 plt.xlabel("Signature size in Bytes")
@@ -352,10 +366,11 @@ plt.show()
 
 dil2_kyber768 = get_experiments(make_filename("dil2", "kyber768", new=True))
 dil2_kyber1024 = get_experiments(make_filename("dil2", "kyber1024", new=True))
-dil3_saber = get_experiments(make_filename("dil3", "saber", new=True))
+dil2_saber = get_experiments(make_filename("dil2", "saber", new=True))
 
 x, y = [], []
-for exp in [(dil2_lightsaber, "lightsaber"), (dil2_kyber768, "kyber768"), (dil2_kyber1024, "kyber1024"), (dil3_saber, "saber")]:
+for exp in [(dil2_lightsaber, "lightsaber"), (dil2_kyber768, "kyber768"), (dil2_kyber1024, "kyber1024"),
+            (dil2_saber, "saber"), (dil2_ntru5, "ntru5")]:
     res = get_mean_RTT(exp[0], "8")
     plt.scatter(ciphertext_or_signature_sizes[exp[1]], res)
     plt.annotate(exp[1], (ciphertext_or_signature_sizes[exp[1]], res))
@@ -368,14 +383,15 @@ plt.grid()
 plt.savefig("figures/CIPHERTEXT_HIGH_LOSS")
 plt.show()
 
-# HIGH LOSS, CIPHERTEXT SIZE
+# HIGH LOSS, SIGNATURE SIZE
 
 dil2_Hsaber = get_experiments(make_filename("dil2", "saber", h_kex=True, new=True))
 fal512_Hsaber = get_experiments(make_filename("fal512", "saber", h_kex=True, new=True))
 rainIa_Hsaber = get_experiments(make_filename("rainbowIa", "saber", h_kex=True, new=True))
 
 x, y = [], []
-for exp in [(dil2_Hsaber, "dil2"), (dil4_firesaber, "dil4"), (fal512_Hsaber, "falcon512"), (picnic1_saber, "picnic3l1"), (picnic3_saber, "picnic3l3"), (picnic5_saber, "picnic3l5"), (rainIa_Hsaber, "rainbowIa")]:
+for exp in [(dil2_Hsaber, "dil2"), (dil4_firesaber, "dil4"), (fal512_Hsaber, "falcon512"), (picnic1_saber, "picnic3l1"),
+            (picnic3_saber, "picnic3l3"), (picnic5_saber, "picnic3l5"), (rainIa_Hsaber, "rainbowIa")]:
     res = get_mean_RTT(exp[0], "8")
     plt.scatter(ciphertext_or_signature_sizes[exp[1]], res)
     plt.annotate(exp[1], (ciphertext_or_signature_sizes[exp[1]], res))
@@ -386,4 +402,45 @@ plt.ylabel("Mean time per handshake + download (seconds)")
 plt.title("Completion time evoluting with signature size for high loss rate, 8 nodes.")
 plt.grid()
 plt.savefig("figures/SIGNATURE_HIGH_LOSS")
+plt.show()
+
+# LOW LOSS, 16 NODES, CIPHERTEXT SIZE
+
+x, y = [], []
+for exp in [(old_dil2_lightsaber, "lightsaber"), (dil2_saber, "saber"), (old_dil2_firesaber, "firesaber"),
+            (old_dil2_kyber512, "kyber512"), (old_dil2_ntru1, "ntru1"), (dil2_kyber768, "kyber768"),
+            (dil2_kyber1024, "kyber1024"), (dil2_ntru5, "ntru5")]:
+    res = get_rtt_min_loss(exp[0], "16")
+    print(res[1])
+    plt.scatter(ciphertext_or_signature_sizes[exp[1]], res[0])
+    plt.annotate(exp[1], (ciphertext_or_signature_sizes[exp[1]], res[0]))
+
+plt.plot(x, y)
+plt.xlabel("Ciphertext size in Bytes")
+plt.ylabel("Mean time per handshake + download (seconds)")
+plt.title("Completion time evoluting with ciphertext size for low loss rate, 16 nodes.")
+plt.grid()
+plt.savefig("figures/CIPHERTEXT_HIGH_NODES")
+plt.show()
+
+
+# LOW LOSS, 16 NODES, SIGNATURE SIZE
+
+x, y = [], []
+for exp in [(dil2_saber, "dil2"), (old_dil4_saber, "dil4"), (old_fal512_saber, "falcon512"),
+            (old_rainbowIa_saber, "rainbowIa"),
+            (picnic1_saber, "picnic3l1"), (picnic3_saber, "picnic3l3"), (picnic5_saber, "picnic3l5"),
+            (fal1024_saber, "falcon1024")]:
+    print(exp[1])
+    res = get_rtt_min_loss(exp[0], "16")
+    print(res[1])
+    plt.scatter(ciphertext_or_signature_sizes[exp[1]], res[0])
+    plt.annotate(exp[1], (ciphertext_or_signature_sizes[exp[1]], res[0]))
+
+plt.plot(x, y)
+plt.xlabel("Signature size in Bytes")
+plt.ylabel("Mean time per handshake + download (seconds)")
+plt.title("Completion time evoluting with signature size for low loss rate, 16 nodes.")
+plt.grid()
+plt.savefig("figures/SIGNATURE_LOW_LOSS")
 plt.show()
