@@ -74,6 +74,7 @@ public_key_sizes = {  # In bytes
     "rainbowVc": 1705536
 }
 
+
 # Functions
 
 
@@ -140,6 +141,9 @@ def get_rtt_max_loss(data, nodes):
     return get_rtt(res), max_loss
 
 # Loss variations for L1
+
+
+rsa_dsa = get_experiments(make_filename("RSA", "DSA", new=True))
 
 
 def loss_graph(nodes, data, legend):
@@ -279,7 +283,7 @@ HrainVc_Hkyber1024 = get_experiments(make_filename("rainbowVc", "kyber1024", new
 
 hybrid_graph(rainVc_kyber1024, HrainVc_kyber1024, rainVc_Hkyber1024, HrainVc_Hkyber1024, "8",
              "Hybrid comparisons for low loss rate values and 8 nodes\nRainbowVc + Kyber1024 (L1 schemes)",
-             "figures/HYBRID_rainbowVc_kyber1024", "Kyber1024", "RainbowVc", all_same=True, bot=13, top=20)
+             "figures/HYBRID_rainbowVc_kyber1024", "Kyber1024", "RainbowVc", all_same=False, bot=13, top=20)
 
 # Picnic Comparisons
 
@@ -358,6 +362,8 @@ plt.xlabel("Signature size in Bytes")
 plt.ylabel("Mean time per handshake + download (seconds)")
 plt.title("Completion time evoluting with signature size for low loss rate, 8 nodes.")
 plt.grid()
+plt.hlines(y=get_rtt_min_loss(rsa_dsa, "8")[0], color="r", xmin=0, xmax=20)
+plt.text(get_rtt_min_loss(rsa_dsa, "8")[0] + 0.2, 10, 'Red line', ha='left', va='center')
 plt.savefig("figures/SIGNATURE_LOW_LOSS")
 plt.show()
 
@@ -407,10 +413,10 @@ plt.show()
 # LOW LOSS, 16 NODES, CIPHERTEXT SIZE
 
 x, y = [], []
-for exp in [(old_dil2_lightsaber, "lightsaber"), (dil2_saber, "saber"), (old_dil2_firesaber, "firesaber"),
-            (old_dil2_kyber512, "kyber512"), (old_dil2_ntru1, "ntru1"), (dil2_kyber768, "kyber768"),
+for exp in [(dil2_saber, "saber"),
+            (dil2_kyber768, "kyber768"),
             (dil2_kyber1024, "kyber1024"), (dil2_ntru5, "ntru5")]:
-    res = get_rtt_min_loss(exp[0], "16")
+    res = get_rtt_min_loss(exp[0], "36")
     print(res[1])
     plt.scatter(ciphertext_or_signature_sizes[exp[1]], res[0])
     plt.annotate(exp[1], (ciphertext_or_signature_sizes[exp[1]], res[0]))
@@ -418,7 +424,7 @@ for exp in [(old_dil2_lightsaber, "lightsaber"), (dil2_saber, "saber"), (old_dil
 plt.plot(x, y)
 plt.xlabel("Ciphertext size in Bytes")
 plt.ylabel("Mean time per handshake + download (seconds)")
-plt.title("Completion time evoluting with ciphertext size for low loss rate, 16 nodes.")
+plt.title("Completion time evoluting with ciphertext size for low loss rate, 36 nodes.")
 plt.grid()
 plt.savefig("figures/CIPHERTEXT_HIGH_NODES")
 plt.show()
@@ -427,12 +433,11 @@ plt.show()
 # LOW LOSS, 16 NODES, SIGNATURE SIZE
 
 x, y = [], []
-for exp in [(dil2_saber, "dil2"), (old_dil4_saber, "dil4"), (old_fal512_saber, "falcon512"),
-            (old_rainbowIa_saber, "rainbowIa"),
+for exp in [(dil2_saber, "dil2"),
             (picnic1_saber, "picnic3l1"), (picnic3_saber, "picnic3l3"), (picnic5_saber, "picnic3l5"),
             (fal1024_saber, "falcon1024")]:
     print(exp[1])
-    res = get_rtt_min_loss(exp[0], "16")
+    res = get_rtt_min_loss(exp[0], "36")
     print(res[1])
     plt.scatter(ciphertext_or_signature_sizes[exp[1]], res[0])
     plt.annotate(exp[1], (ciphertext_or_signature_sizes[exp[1]], res[0]))
@@ -440,7 +445,18 @@ for exp in [(dil2_saber, "dil2"), (old_dil4_saber, "dil4"), (old_fal512_saber, "
 plt.plot(x, y)
 plt.xlabel("Signature size in Bytes")
 plt.ylabel("Mean time per handshake + download (seconds)")
-plt.title("Completion time evoluting with signature size for low loss rate, 16 nodes.")
+plt.title("Completion time evoluting with signature size for low loss rate, 36 nodes.")
 plt.grid()
-plt.savefig("figures/SIGNATURE_LOW_LOSS")
+plt.savefig("figures/SIGNATURE_HIGH_NODES")
 plt.show()
+
+
+# More  Hybrid Graphs
+fal512_kyber1024 = get_experiments(make_filename("fal512", "kyber1024", new=True))
+Hfal512_kyber1024 = get_experiments(make_filename("fal512", "kyber1024", h_sig=True, new=True))
+fal512_Hkyber1024 = get_experiments(make_filename("fal512", "kyber1024", h_kex=True, new=True))
+Hfal512_Hkyber1024 = get_experiments(make_filename("fal512", "kyber1024", h_sig=True, h_kex=True, new=True))
+
+hybrid_graph(fal512_kyber1024, Hfal512_kyber1024, fal512_Hkyber1024, Hfal512_Hkyber1024, "8",
+             "Hybrid comparisons for low loss rate values and 8 nodes\nFalcon512 + Kyber1024 (L1xL5 schemes)",
+             "figures/HYBRID_fal512_kyber1024", "Kyber1024", "Falcon512", all_same=False, bot=0.15, top=0.2)
