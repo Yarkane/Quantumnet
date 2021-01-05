@@ -112,3 +112,4 @@ Supported key exchange algorithms :
     ntru_hps2048509, ntru_hps2048677, ntru_hps4096821, ntru_hrss701
     kyber512, kyber768, kyber1024, kyber90s512, kyber90s768, kyber90s1024
 
+# Further documentation is available in the Wiki !
