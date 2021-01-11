@@ -104,9 +104,12 @@ Supported signature algorithms :
     dilithium2, dilithium3, dilithium4
     falcon512, falcon1024
     rainbowlaclassic, rainbowVcclassic
+    picnic3l1, picnic3l3, picnic3l5
 
 Supported key exchange algorithms :
 
     lightsaber, saber, firesaber
     ntru_hps2048509, ntru_hps2048677, ntru_hps4096821, ntru_hrss701
     kyber512, kyber768, kyber1024, kyber90s512, kyber90s768, kyber90s1024
+
+# Further documentation is available in the Wiki !
