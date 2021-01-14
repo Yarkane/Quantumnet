@@ -20,7 +20,7 @@ You can download the mininet.org VM, or, if you run an appropriate OS, enter the
 
 To get the Quantumnet toolkit, type these commands nand it should be fine.
 
-    git clone git@gitlab.epfl.ch:sjacquie/post-quantum-benchmark.git
+    git clone https://github.com/Yarkane/Quantumnet.git
     sudo ./install-prereqs-ubuntu.sh
     pip3 install requests-html click flask
 
